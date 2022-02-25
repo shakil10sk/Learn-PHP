@@ -1,0 +1,16 @@
+{
+    "name": "bhnagamon/package",
+    "description": "bhnagamon er koster jonno ai package ti banano hocce",
+    "autoload": {
+        "psr-4": {
+            "Bhnagamon\\Package\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "shakil10sk",
+            "email": "shakil550sh@gmail.com"
+        }
+    ],
+    "require": {}
+}
