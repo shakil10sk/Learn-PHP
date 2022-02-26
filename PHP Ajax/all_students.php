@@ -21,6 +21,7 @@ if (mysqli_num_rows($result) > 0) {
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Mobile</th>
+                    <th>Action</th>
                 </tr>';
     while ($row = mysqli_fetch_assoc($result)) {
         $r =  $count++;
@@ -29,7 +30,13 @@ if (mysqli_num_rows($result) > 0) {
             <td style='background-color:green;'>{$row["first_name"]}</td>
             <td style='background-color:blue;'>{$row["last_name"]}</td>
             <td style='background-color:orange;'>{$row["mobile"]}</td>
-        </tr>";
+            <td style='background-color:yeallow;'>
+                <button id='edit_student' data-id='{$row["id"]}' class='btn btn-warning btn-md'>Edit</button>
+                |
+                <button id='delete_student' data-id='{$row["id"]}' class='btn btn-danger btn-md'>Delete</button>
+            </td>
+                </tr>";
+                // <a href='delete.php?id={$row["id"]}'>Delete</a>
     }
     $output .= "</table>";
     mysqli_close($conn);

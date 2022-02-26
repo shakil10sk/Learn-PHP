@@ -13,6 +13,45 @@
     <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script> -->
+
+        <style>
+            #modal{
+                background: rgba(0, 0, 0, 0.7);
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 100;
+                display: none;
+            }
+            #modal-form{
+                background: #fff;
+                width: 30%;
+                position: relative;
+                top: 20%;
+                left: calc(50% - 15%);;
+                padding: 15px;
+                border-radius: 4px;
+            }
+            #modal-form h2{
+                margin: 0  0 15px;
+                padding-bottom: 10px;
+                border-bottom: 10px solid #000;
+            }
+            #close-btn{
+                background: red;
+                color: white;
+                width: 30px;
+                height: 30px;
+                text-align: center;
+                border-radius: 50%;
+                position: absolute;
+                top: -15px;
+                right: -15px;
+                cursor: pointer;
+            }
+        </style>
 </head>
 
 <body>
@@ -22,6 +61,7 @@
         <div class="row">
             <div class="col-md-10 mx-auto text-center" style="background-color:rgb(39, 38, 38)">
                 <!-- <form aid="add_student"> -->
+                    <input type="hidden" name="stu_id" id="stu_id">
                     First Name: <input class="form-control" type="text" name="first_name" id="first_name" placeholder="give a valid first_name"><br>
                     Last Name : <input class="form-control" type="text" name="last_name" id="last_name" placeholder="give a valid last_name"><br>
                     <input type="submit" onclick="saveStudentData(this);"  id="submit" value="submit" class="btn btn-md btn-primary">
@@ -45,6 +85,16 @@
             <div id="data_table" class="col-md-10 mx-auto text-right p-2" style="background-color: rgb(209, 218, 215);">
                 &nbsp;
             </div>
+        </div>
+
+        <div id="modal">
+            <div id="modal-form">
+                <table cellpadding="10px" width="100%">
+                    
+                </table>
+                <div id="close-btn">X</div>
+            </div>
+
         </div>
     </div>
 
@@ -108,7 +158,88 @@
                     })
                 }
 
-            }            
+            };         
+
+            
+
+            $(document).on("click","#delete_student",function(){
+                if(confirm("Do you really want to delete this record ?")){
+                    var studentId = $(this).data("id");
+                    var element = this;
+                    // alert(studentId);
+                    $.ajax({
+                        url : "student_delete.php",
+                        type : "POST",
+                        data : {
+                            id : studentId,
+                        },
+                        success : function(data){
+                            if(data == 1){
+                                $(element).closest("tr").fadeOut();
+                            }else{
+                                $("#error").text("can't delete records").slideDown();
+                                $("#success").slideUp();
+                            }
+                        }
+                    })
+                }
+            });
+
+            $(document).on("click","#edit_student",function(){
+                $("#modal").show();
+                var studentId = $(this).data("id");
+                console.log(studentId);
+
+                $("#stu_id").val();
+                $("#first_name").val();
+                $("#last_name").val();
+
+                $.ajax({
+                    url : "edit_student.php",
+                    type : "post",
+                    data : {
+                        id : studentId,
+                    },
+                    success:function(data){
+                        // console.log(data);
+                        // alert(data);
+                        $("#modal-form table").html(data);
+                    }
+                })
+
+            });
+
+            $("#close-btn").on("click",function(){
+                $("#modal").hide();
+            })
+
+            $(document).on("click","#edit-submit",function(){
+                var stuId = $("#edit_id").val();
+                var fname = $("#edit_fname").val();
+                var lname = $("#edit_lname").val();
+
+                $.ajax({
+                    url : "student_update.php",
+                    type : "POST",
+                    data : {
+                        stuId : stuId,
+                        fname : fname,
+                        lname : lname
+                    },
+                    success : function(response){
+                        if(response == 1){
+                            loadtable();
+                            $("#success").text("Data Updated Successfully");
+                            // $("#add_student").trigger("reset");
+                            $("#fname").val('');
+                            $("#lname").val('');
+                            $("#modal").hide();
+                        }else{
+                            $("#error").text("Data Not Updated");
+                        }
+                    }
+                })
+            })
     
     </script>
 </body>
