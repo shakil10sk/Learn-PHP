@@ -72,6 +72,17 @@
             </div>
         </div>
         <br>
+        <div class="row">
+            <div class="col-md-10 mx-auto text-center">
+                <input type="text" name="search" id="search" placeholder="give your first search">
+                <!-- <button type="button" class="btn btn-md bg-primary" id="serch_btn" onclick="searchResult();" >
+                    Search
+                </button> -->
+
+
+            </div>
+        </div>
+        <br>
         <div class="row  bg-danger">
             <div class="col-md-10 mx-auto text-center">
                     <button type="button" class="btn btn-md" style="background-color: lime;" name="load_data" id="load_data" onclick="loadtable();" value="load_data">
@@ -83,9 +94,15 @@
         <div class="d-flex flex-row">
             <div class="col-md-1"></div>
             <div id="data_table" class="col-md-10 mx-auto text-right p-2" style="background-color: rgb(209, 218, 215);">
-                &nbsp;
+
+                <!-- <div id="pagination" style="margin: 5px 480px">
+                    <a  id="1" class="btn btn-info active" href="">1</a>
+                    <a  id="2" class="btn btn-info" href="">2</a>
+                    <a  id="3" class="btn btn-info" href="">3</a>
+                </div> -->
             </div>
         </div>
+        
 
         <div id="modal">
             <div id="modal-form">
@@ -240,7 +257,41 @@
                     }
                 })
             })
-    
+
+           
+            $("#search").on("keyup",function(){
+                var serchResult = $(this).val();
+
+                $.ajax({
+                    url : "ajax_live_search.php",
+                    type : "POST",
+                    data : {
+                        search : serchResult, 
+                    },
+                    success : function(data){
+                        console.log(data);
+                        $("#data_table").html(data);
+                    }
+                })
+            })
+
+            $(document).on("click","#pagination a",function(e){
+                e.preventDefault();
+                var page_id = $(this).attr("id");
+            })
+
+            function loadPage(page){
+                $.ajax({
+                    url: "ajax_pagination.php",
+                    type: "POST",
+                    data: {
+                        page_no : page,
+                    },
+                    success : function(data){
+                        $("#data_table").html(data);
+                    }
+                })
+            }
     </script>
 </body>
 
