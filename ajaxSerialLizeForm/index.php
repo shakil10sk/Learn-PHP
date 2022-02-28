@@ -110,10 +110,17 @@
                         url : "serialLize.php",
                         type: "POST",
                         data: $("#submit-form").serialize(),
+                        beforeSend : function(){
+                            $("#response").fadeIn();
+                            $("#response").removeClass('alert alert-success alert-danger').addClass('alert alert-warning').html("Loading........");
+                        },
                         success : function(data){
                             $("#submit-form").trigger("reset");
                             $("#response").fadeIn();
-                            $("#response").removeClass('alert alert-danger').addClass('alert alert-success').html(data);
+                            $("#response").removeClass('alert alert-danger alert-warning').addClass('alert alert-success').html(data);
+                            setTimeout(() => {
+                                $("#response").fadeOut("slow");
+                            }, 3000);
                         }
                     });
                 }
