@@ -1,10 +1,13 @@
 <?php
+    $search =  $_POST['search'];
+
 
 include "./config.php";
 
 $sql = "SELECT * 
-           FROM student";
-
+           FROM student 
+           where first_name like '%{$search}%' or last_name like '%{$search}%'";
+           
 $result = mysqli_query($conn, $sql) or die("sql wrong");
 
 // echo "<pre>";
@@ -42,3 +45,5 @@ if (mysqli_num_rows($result) > 0) {
     mysqli_close($conn);
     echo $output;
 }
+
+?>
